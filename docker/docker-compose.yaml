@@ -1,0 +1,39 @@
+name: cv-job-analyzer
+
+services:
+  fastapi:
+    build:
+      context: ..
+      dockerfile: docker/cvJobAnalyzer/Dockerfile
+    container_name: fastapi
+    expose:
+      - "8000"
+    networks:
+      - backend
+    restart: always
+    env_file:
+      - ./env/.env
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=2)"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+
+  nginx:
+    image: nginx:1.31-perl
+    container_name: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      fastapi:
+        condition: service_healthy
+    networks:
+      - backend
+    restart: always
+
+networks:
+  backend:
+    driver: bridge
