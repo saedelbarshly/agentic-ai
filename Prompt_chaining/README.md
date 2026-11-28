@@ -5,6 +5,12 @@ uses two deterministic gates to route application-ready and gap-review reports.
 The workflow is implemented in plain Python; candidate content is not persisted
 or included in application logs.
 
+All commands below are run from the `Prompt_chaining/` directory:
+
+```powershell
+cd Prompt_chaining
+```
+
 ## Requirements
 
 - Python 3.12 (the `agentic-ai` Conda environment is used for this workspace)
